@@ -25,50 +25,34 @@
 # ============================================================================== #
 
 import os
-import numpy as np
+import tensorflow as tf
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Input, LSTM, Dense, Dropout
-from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.layers import LSTM, Dropout, Dense
 
-
-class MultiStockLSTM:
-    def __init__(self, project_folder, time_steps=3):
+class LongShortTermMemory:
+    def __init__(self, project_folder):
         self.project_folder = project_folder
-        self.time_steps = time_steps
 
-    def create_lstm_model(self, input_shape):
+    def get_defined_metrics(self):
+        return [tf.keras.metrics.MeanSquaredError(name='MSE')]
+
+    def get_callback(self):
+        callback = tf.keras.callbacks.EarlyStopping(
+            monitor='val_loss', patience=3, mode='min', verbose=1
+        )
+        return callback
+
+    def create_model(self, x_train):
         model = Sequential([
-            Input(shape=input_shape),
-            LSTM(100, return_sequences=True),
+            LSTM(units=100, return_sequences=True, input_shape=(x_train.shape[1], 1)),
             Dropout(0.2),
-            LSTM(50, return_sequences=False),
+            LSTM(units=50, return_sequences=True),
             Dropout(0.2),
-            Dense(1)
+            LSTM(units=50, return_sequences=True),
+            Dropout(0.5),
+            LSTM(units=50),
+            Dropout(0.5),
+            Dense(units=1)
         ])
-        model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mse'])
+        model.summary()
         return model
-
-    def train_multiple_stocks(self, stock_data_obj, tickers, epochs=50, batch_size=10):
-        trained_models = {}
-
-        for ticker in tickers:
-            print(f"Training model for {ticker}")
-
-            # Prepare data for each ticker
-            x_train, y_train = stock_data_obj.transform_to_numpy(ticker, self.time_steps)
-
-            # Create and train model
-            model = self.create_lstm_model(input_shape=(x_train.shape[1], 1))
-
-            early_stop = EarlyStopping(monitor='loss', patience=5, verbose=1)
-
-            model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, callbacks=[early_stop])
-
-            # Save the model
-            model_filename = os.path.join(self.project_folder, f"{ticker}_model.h5")
-            model.save(model_filename)
-            trained_models[ticker] = model_filename
-
-            print(f"Model for {ticker} saved at {model_filename}")
-
-        return trained_models

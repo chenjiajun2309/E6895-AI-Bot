@@ -4,8 +4,8 @@
 ### Columbia University | Midterm Project
 
 **Project Team:**
-- **Jiajun Chen** jc6397@columbia.edu
-- **Jiawei Meng**
+- **Jiajun Chen** (jc6397@columbia.edu)
+- **Jiawei Meng** (jm5876@columbia.edu)
 
 ---
 

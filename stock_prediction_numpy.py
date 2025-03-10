@@ -23,6 +23,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ============================================================================== #
+import os
 import numpy as np
 import pandas as pd
 import yfinance as yf
@@ -53,18 +54,22 @@ class StockData:
             setattr(self, f"{ticker}_train", training_data)
             setattr(self, f"{ticker}_test_data", data[data['Date'] >= self.validation_date].set_index('Date'))
 
-    def transform_to_numpy(self, ticker, time_steps=3):
-        training_data = pd.read_csv(f"{ticker}_data.csv", index_col='Date')
+    def transform_to_numpy(self, ticker, time_steps):
+        training_data = pd.read_csv(os.path.join("data", f"{ticker}_data.csv"), index_col='Date')
         scaled_data = self.min_max_scalers[ticker].fit_transform(training_data)
+
         x_train, y_train = [], []
         for i in range(time_steps, scaled_data.shape[0]):
-            x_train_seq = scaled_data[i-time_steps:i]
-            x_train.append(x_train)
+            x_train_seq = scaled_data[i - time_steps:i]
+            x_train.append(x_train_seq)
             y_train.append(scaled_data[i, 0])
 
         x_train, y_train = np.array(x_train), np.array(y_train)
-        x_train = x_train.reshape((x_train.shape[0], time_steps, 1))
+        x_train = np.reshape(x_train, (x_train.shape[0], time_steps, 1))
+
         return x_train, y_train
+
+
 
 
 

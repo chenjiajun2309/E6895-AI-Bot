@@ -40,19 +40,19 @@ class StockData:
 
     def download_stock_data(self):
         end_date = datetime.today()
-        data = {}
         for ticker in self.tickers:
             print(f'Downloading data for {ticker}')
             df = yf.download(ticker, start=self.start_date, end=end_date)
             data = df[['Close']].copy()
             data.dropna(inplace=True)
-            data.to_csv(f"{ticker}_data.csv")
+            # 修改这里，增加data/目录
+            data.to_csv(os.path.join("data", f"{ticker}_data.csv"))
             data.reset_index(inplace=True)
             training_data = data[data['Date'] < self.validation_date].set_index('Date')
             test_data = data[data['Date'] >= self.validation_date].set_index('Date')
             self.min_max_scalers[ticker].fit(training_data)
             setattr(self, f"{ticker}_train", training_data)
-            setattr(self, f"{ticker}_test_data", data[data['Date'] >= self.validation_date].set_index('Date'))
+            setattr(self, f"{ticker}_test_data", test_data)
 
     def transform_to_numpy(self, ticker, time_steps):
         training_data = pd.read_csv(os.path.join("data", f"{ticker}_data.csv"), index_col='Date')

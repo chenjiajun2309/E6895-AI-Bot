@@ -1,15 +1,4 @@
-# Copyright 2024-2025 Jiajun Chen and Jiawei Meng. All Rights Reserved.
-#
-# This project is developed as part of the coursework for EECS E6895: Advanced Big Data and AI
-# at Columbia University.
-#
-# Project Team:
-# - Jiajun Chen
-# - Jiawei Meng
-#
-# Course: EECS E6895: Advanced Big Data and AI
-# University: Columbia University
-# Project Direction: Fund Manager / M&A Specialist
+# Copyright 2020-2024 Jordi Corbilla. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,11 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# ============================================================================== #
+# ==============================================================================
+
 
 class StockPrediction:
-    def __init__(self, ticker, start_date, validation_date, project_folder, github_url, epochs, time_steps, token,
-                 batch_size):
+    def __init__(self, ticker, start_date, validation_date, project_folder, github_url, epochs, time_steps, token, batch_size):
         self._ticker = ticker
         self._start_date = start_date
         self._validation_date = validation_date
@@ -60,21 +49,21 @@ class StockPrediction:
 
     def set_project_folder(self, value):
         self._project_folder = value
-
+        
     def set_github_url(self, value):
         self._github_url = value
-
+        
     def get_github_url(self):
         return self._github_url
-
+    
     def get_epochs(self):
         return self._epochs
 
     def get_time_steps(self):
         return self._time_steps
-
+        
     def get_token(self):
-        return self._token
-
+        return self._token     
+    
     def get_batch_size(self):
-        return self._batch_size
+        return self._batch_size     

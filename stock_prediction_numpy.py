@@ -24,10 +24,12 @@ import yfinance as yf
 
 
 class StockData:
-    def __init__(self, stock):
-        self._stock = stock
-        self._sec = yf.Ticker(self._stock.get_ticker())
-        self._min_max = MinMaxScaler(feature_range=(0, 1))
+    def __init__(self, tickers, start_date, validation_date):
+        self.tickers = tickers
+        self.start_date = start_date
+        self.validation_date = validation_date
+        self.min_max_scalers = {ticker: MinMaxScaler(feature_range=(0, 1)) for ticker in tickers}
+
 
     def __data_verification(self, train):
         print('mean:', train.mean(axis=0))

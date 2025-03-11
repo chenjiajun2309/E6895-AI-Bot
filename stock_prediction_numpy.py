@@ -1,15 +1,4 @@
-# Copyright 2024-2025 Jiajun Chen and Jiawei Meng. All Rights Reserved.
-#
-# This project is developed as part of the coursework for EECS E6895: Advanced Big Data and AI
-# at Columbia University.
-#
-# Project Team:
-# - Jiajun Chen
-# - Jiawei Meng
-#
-# Course: EECS E6895: Advanced Big Data and AI
-# University: Columbia University
-# Project Direction: Fund Manager / M&A Specialist
+# Copyright 2020-2024 Jordi Corbilla. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# ============================================================================== #
+# ==============================================================================
 import os
 
 import numpy as np
@@ -35,12 +24,10 @@ import yfinance as yf
 
 
 class StockData:
-    def __init__(self, tickers, start_date, validation_date):
-        self.tickers = tickers
-        self.start_date = start_date
-        self.validation_date = validation_date
-        self.min_max_scalers = {ticker: MinMaxScaler(feature_range=(0, 1)) for ticker in tickers}
-
+    def __init__(self, stock):
+        self._stock = stock
+        self._sec = yf.Ticker(self._stock.get_ticker())
+        self._min_max = MinMaxScaler(feature_range=(0, 1))
 
     def __data_verification(self, train):
         print('mean:', train.mean(axis=0))
